@@ -14,6 +14,7 @@ using std::vector;
 class Liwanze
 {
 public:
+
 	//Enum Region
 	enum Region
 	{

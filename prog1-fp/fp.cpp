@@ -194,7 +194,7 @@ void print_members(vector<Liwanze>&  lVec)
 	cout << endl;
 	cout << endl;
 }
-void add_Liwanze(vector<Liwanze>& lvac)
+void add_Liwanze(vector<Liwanze>& liVec)
 {
 	string liname{};
 	bool namefree{ true };
@@ -217,7 +217,7 @@ void add_Liwanze(vector<Liwanze>& lvac)
 			break;
 		}
 
-		for (auto& n : lvac)
+		for (auto& n : liVec)
 		{
 			if (n.get_name() == liname)
 			{
@@ -239,9 +239,9 @@ void add_Liwanze(vector<Liwanze>& lvac)
 		switch (namefree)
 		{
 		case true:
-			lvac.push_back({ liname, Liwanze::ndef });
+			liVec.push_back({ liname, Liwanze::ndef });
 			cout << endl;
-			print_members(lvac);
+			print_members(liVec);
 			continue;
 		default:
 			cout << "Diese Liwanze existiert bereits, versuchen sie es erneut!" << endl;
