@@ -15,9 +15,11 @@ using std::cin;
 using std::endl;
 using std::cerr;
 
+//Hilfsvector, welcher in der Print Funktion benötigt wird
 const vector<string> Liwanze::ves{ "ndef", "amer", "apac", "amea" };
 
-Liwanze::Liwanze(string conname, Region conregion)
+// Konstruktor für den ersten Teil der Aufgabe
+Liwanze::Liwanze(const string& conname, Region conregion = ndef)
 	:name{ conname }, loc{ conregion }, connects_to{}, connected_from{}
 {
 	if (name == "")
@@ -26,7 +28,8 @@ Liwanze::Liwanze(string conname, Region conregion)
 	}
 }
 
-Liwanze::Liwanze(string name, Region region, vector<string> connects_to, vector<string> connected_from)
+// Erweiterter Konstruktor, für den weiterführenden Teil der Aufgabe
+Liwanze::Liwanze(const string& name, Region region, vector<string> connects_to, vector<string> connected_from)
 	:name{ name }, loc{ region }, connects_to{ connects_to }, connected_from{ connected_from }
 {
 	if (name == "")
@@ -35,8 +38,9 @@ Liwanze::Liwanze(string name, Region region, vector<string> connects_to, vector<
 	}
 }
 
+// Kopierkonstruktor, braucht man hier nicht unbedingt, muss nicht unbedingt mit Gettern gefüllt werden
 Liwanze::Liwanze(const Liwanze& other)
-	:Liwanze{other.get_name(), other.get_loc(), other.get_connects_to(), other.get_connected_from() }
+	:Liwanze{other.name, other.get_loc(), other.get_connects_to(), other.get_connected_from() }
 {
 	if (name == "")
 	{
@@ -45,27 +49,31 @@ Liwanze::Liwanze(const Liwanze& other)
 }
 
 
-
+// Getter für name
 string Liwanze::get_name() const
 {
 	return name;
 }
 
+// Getter für Location
 Liwanze::Region Liwanze::get_loc() const
 {
 	return loc;
 }
 
+// Getter für connects_to
 vector<string> Liwanze::get_connects_to() const
 {
 	return this->connects_to;
 }
 
+// Getter für connected_from
 vector<string> Liwanze::get_connected_from() const
 {
 	return this->connected_from;
 }
 
+// Print Funktion für eine Liwanze
 void Liwanze::print() const
 {
 	
@@ -76,6 +84,7 @@ void Liwanze::print() const
 
 }
 
+// Checkt ob eine eingehende Verbindung existiert
 bool Liwanze::connects(string coname) const
 {
 	for (auto& n : this->connects_to)
@@ -89,6 +98,7 @@ bool Liwanze::connects(string coname) const
 	return false;
 }
 
+// Checkt ob eine ausgehende Verbindung existiert
 bool Liwanze::connected(string coname) const
 {
 	for (auto& n : this->connected_from)
@@ -102,6 +112,7 @@ bool Liwanze::connected(string coname) const
 	return false;
 }
 
+// Verbindung von und zu Liwanze ausdrucken
 void Liwanze::print_tierone() const
 {
 	cout << "Diese Liwanze ist zu folgenden Liwazen verbunden:" << "(" << this->size_connects() << ")";
@@ -120,6 +131,7 @@ void Liwanze::print_tierone() const
 
 }
 
+// Push_back Verbindung zu
 bool Liwanze::addconn_to(string coname)
 {
 	if (connects(coname))
@@ -135,6 +147,7 @@ bool Liwanze::addconn_to(string coname)
 	}
 }
 
+// Push_back Verbindung von
 bool Liwanze::addconn_from(string coname)
 {
 	if (connected(coname))
@@ -150,6 +163,7 @@ bool Liwanze::addconn_from(string coname)
 	}
 }
 
+// Printet ausgehenden Verbindungen zu einer Liwanze
 void Liwanze::print_connects() const
 {
 	for (auto& n : connects_to)
@@ -161,6 +175,7 @@ void Liwanze::print_connects() const
 
 }
 
+// Printet eingehenden Verbindungen zu einer Liwanze
 void Liwanze::print_connected() const
 {
 	for (auto& n : connected_from)
@@ -172,11 +187,13 @@ void Liwanze::print_connected() const
 
 }
 
+// Gibt Größe des vectors connects_to zurück, quasi Getter für connects.size()
 int Liwanze::size_connects() const
 {
 	return static_cast<int>(connects_to.size());
 }
 
+// Gibt Größe des vectors connected_from zurück, quasi Getter für connected.size()
 int Liwanze::size_connected() const
 {
 	return static_cast<int>(connected_from.size());
@@ -184,6 +201,7 @@ int Liwanze::size_connected() const
 
 
 //Support funktionen
+// Gibt alle Liwanzen aus dem vector lVec aus
 void print_members(vector<Liwanze>&  lVec)
 {
 	cout << "Dies ist eine Liste aller Lizanzen: " << endl;
@@ -194,6 +212,8 @@ void print_members(vector<Liwanze>&  lVec)
 	cout << endl;
 	cout << endl;
 }
+
+// Liwanze in den Vector push_back und überprüfung ob der Name bereits im Vector existiert
 void add_Liwanze(vector<Liwanze>& liVec)
 {
 	string liname{};
@@ -258,6 +278,9 @@ void add_Liwanze(vector<Liwanze>& liVec)
 
 
 }
+
+//make_connection wurde hier überladen, um es entweder mit 2 Liwanzen Typen aufzurufen oder mit 2 int Werten und Vector
+//stellt Verbindungen zwischen den Liwanzen her und speichert diese dann in lvec
 void make_connection(Liwanze& a, Liwanze& b)
 {
 	a.addconn_to(b.get_name());
@@ -265,43 +288,46 @@ void make_connection(Liwanze& a, Liwanze& b)
 
 }
 
-void make_connection(int a, int b, vector<Liwanze>& lvec)
+//stellt Verbindungen zwischen den Liwanzen her und speichert diese dann in lvec
+void make_connection(int a, int b, vector<Liwanze>& lVec)
 {
-	lvec.at(a).addconn_to(lvec.at(b).get_name());
-	lvec.at(b).addconn_from(lvec.at(a).get_name());
+	lVec.at(a).addconn_to(lVec.at(b).get_name());
+	lVec.at(b).addconn_from(lVec.at(a).get_name());
 
 }
 
-
-void init_connections(vector<Liwanze>&  lvac)
+//Initialisiert die ersten Verbindungen zwischen den Liwanzen
+void init_connections(vector<Liwanze>&  lVec)
 {
-	make_connection(lvac.at(2), lvac.at(4));
-	make_connection(lvac.at(0), lvac.at(1));
-	make_connection(lvac.at(0), lvac.at(5));
-	make_connection(lvac.at(0), lvac.at(4));
-	make_connection(lvac.at(1), lvac.at(0));
-	make_connection(lvac.at(1), lvac.at(4));
-	make_connection(lvac.at(5), lvac.at(0));
-	make_connection(lvac.at(3), lvac.at(4));
+	make_connection(lVec.at(2), lVec.at(4));
+	make_connection(lVec.at(0), lVec.at(1));
+	make_connection(lVec.at(0), lVec.at(5));
+	make_connection(lVec.at(0), lVec.at(4));
+	make_connection(lVec.at(1), lVec.at(0));
+	make_connection(lVec.at(1), lVec.at(4));
+	make_connection(lVec.at(5), lVec.at(0));
+	make_connection(lVec.at(3), lVec.at(4));
 
 
 }
-void print_network(vector<Liwanze>&  lvac)
+
+//Gibt das entstandene Netzwerk ink. Verbindungen grafisch gut sichtbar aus
+void print_network(vector<Liwanze>&  lVec)
 {
 
 
 	cout << std::setw(20) << std::setfill(' ') << "";
 
-	for (auto& n : lvac)
+	for (auto& n : lVec)
 	{
 		cout << std::setw(20) << std::setfill(' ') << n.get_name() << "";
 	}
 	cout << endl;
 
-	for (auto& n : lvac)
+	for (auto& n : lVec)
 	{
 		cout << std::setw(20) << std::setfill(' ') << n.get_name();
-		for (auto& n2 : lvac)
+		for (auto& n2 : lVec)
 		{
 			if (n.connects(n2.get_name()))
 			{
@@ -317,7 +343,8 @@ void print_network(vector<Liwanze>&  lvac)
 	cout << endl;
 }
 
-void user_addconn(vector<Liwanze>& lvec)
+// Stellt Verbindungen zwischen den Liwanzen her und überprüft ob die Namen der zu verbindenden Liwanzen existert
+void user_addconn(vector<Liwanze>& lVec)
 {
 	string sLiwanzA{};
 	string sLiwanzB{};
@@ -325,8 +352,8 @@ void user_addconn(vector<Liwanze>& lvec)
 	bool boolLiwanzeB{false};
 	//Liwanze* a{ nullptr };
 	//Liwanze* b{ nullptr };
-	int iLiwanzA;
-	int iLiwanzB;
+	int iLiwanzA{};
+	int iLiwanzB{};
 
 
 	
@@ -344,10 +371,10 @@ void user_addconn(vector<Liwanze>& lvec)
 			break;
 		}
 	
-			
-		for (int i{}; i < lvec.size(); i++ )
+		// Überprüfung ob die Liwanze existiert	
+		for (int i{}; i < lVec.size(); i++ )
 		{
-			if (lvec.at(i).get_name() == sLiwanzA)
+			if (lVec.at(i).get_name() == sLiwanzA)
 			{
 				iLiwanzA = i;
 				boolLiwanzeA = true;
@@ -355,13 +382,14 @@ void user_addconn(vector<Liwanze>& lvec)
 
 
 		}
+		
 		if (boolLiwanzeA == false)
 		{
 			cout << "Diese Liwanze existiert nicht! Bitte nochmal versuchen ";
 			continue;
 		}
 		
-
+		// Ab hier beginnt die Eingabe einer zweiten Liwanze
 		cout << "Geben sie den zweiten Namen ein: ";
 		cin >> sLiwanzB;
 		if (!cin)
@@ -373,10 +401,10 @@ void user_addconn(vector<Liwanze>& lvec)
 			break;
 		}
 
-		
-		for (int i{}; i < lvec.size(); i++)
+		// Überprüfung ob die Liwanze existiert
+		for (int i{}; i < lVec.size(); i++)
 		{
-			if (lvec.at(i).get_name() == sLiwanzB)
+			if (lVec.at(i).get_name() == sLiwanzB)
 			{
 				iLiwanzB = i;
 				boolLiwanzeB = true;
@@ -389,14 +417,15 @@ void user_addconn(vector<Liwanze>& lvec)
 			continue;
 		}
 
-		make_connection(lvec.at(iLiwanzA), lvec.at(iLiwanzB));
+		// Ruft make_connextion auf, und verbindet damit die vorher eingegbenen Liwanzen
+		make_connection(lVec.at(iLiwanzA), lVec.at(iLiwanzB));
 
+		// Nach der Herstellung der Verbindung, wird es noch mal ausgegeben
+		cout << lVec.at(iLiwanzA).get_name() << ":" << endl;
+		lVec.at(iLiwanzA).print_tierone();
 
-		cout << lvec.at(iLiwanzA).get_name() << ":" << endl;
-		lvec.at(iLiwanzA).print_tierone();
-
-		cout << lvec.at(iLiwanzB).get_name() << ":" << endl;
-		lvec.at(iLiwanzB).print_tierone();
+		cout << lVec.at(iLiwanzB).get_name() << ":" << endl;
+		lVec.at(iLiwanzB).print_tierone();
 
 		boolLiwanzeA = false;
 		boolLiwanzeB = false;

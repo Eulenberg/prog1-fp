@@ -24,8 +24,8 @@ public:
 	
 	//Konstruktor
 	Liwanze() = delete;
-	Liwanze(string name, Region region);
-	Liwanze(string name, Region region, vector<string> connects_to, vector<string> connected_from);
+	Liwanze(const string& name, Region region);
+	Liwanze(const string& name, Region region, vector<string> connects_to, vector<string> connected_from);
 	Liwanze(const Liwanze& other);
 	
 
@@ -48,6 +48,7 @@ public:
 	int size_connects() const;
 	int size_connected() const;
 
+	//Hilfsvector immer mit static
 	static const vector<string>ves;
 
 private:
@@ -68,7 +69,7 @@ private:
 
 
 };
-
+// Erwähnung der Funktionen
 void print_members(vector<Liwanze>&  lVec);
 void add_Liwanze(vector<Liwanze>& lvac);
 void make_connection(Liwanze& a, Liwanze& b);
