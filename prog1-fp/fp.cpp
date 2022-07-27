@@ -264,6 +264,15 @@ void make_connection(Liwanze& a, Liwanze& b)
 	b.addconn_from(a.get_name());
 
 }
+
+void make_connection(int a, int b, vector<Liwanze>& lvec)
+{
+	lvec.at(a).addconn_to(lvec.at(b).get_name());
+	lvec.at(b).addconn_from(lvec.at(a).get_name());
+
+}
+
+
 void init_connections(vector<Liwanze>&  lvac)
 {
 	make_connection(lvac.at(2), lvac.at(4));
@@ -308,14 +317,16 @@ void print_network(vector<Liwanze>&  lvac)
 	cout << endl;
 }
 
-void user_addconn(vector<Liwanze>& lvac)
+void user_addconn(vector<Liwanze>& lvec)
 {
 	string sLiwanzA{};
 	string sLiwanzB{};
-	bool stringA{false};
-	bool stringB{false};
-	Liwanze* a{ nullptr };
-	Liwanze* b{ nullptr };
+	bool boolLiwanzeA{false};
+	bool boolLiwanzeB{false};
+	//Liwanze* a{ nullptr };
+	//Liwanze* b{ nullptr };
+	int iLiwanzA;
+	int iLiwanzB;
 
 
 	
@@ -334,17 +345,17 @@ void user_addconn(vector<Liwanze>& lvac)
 		}
 	
 			
-		for (auto& n : lvac)
+		for (int i{}; i < lvec.size(); i++ )
 		{
-			if (n.get_name() == sLiwanzA)
+			if (lvec.at(i).get_name() == sLiwanzA)
 			{
-				a = &n;
-				stringA = true;
+				iLiwanzA = i;
+				boolLiwanzeA = true;
 			}
 
 
 		}
-		if (stringA == false)
+		if (boolLiwanzeA == false)
 		{
 			cout << "Diese Liwanze existiert nicht! Bitte nochmal versuchen ";
 			continue;
@@ -363,27 +374,36 @@ void user_addconn(vector<Liwanze>& lvac)
 		}
 
 		
-		for (auto& n : lvac)
+		for (int i{}; i < lvec.size(); i++)
 		{
-			if (n.get_name() == sLiwanzB)
+			if (lvec.at(i).get_name() == sLiwanzB)
 			{
-				b = &n;
-				stringB = true;
+				iLiwanzB = i;
+				boolLiwanzeB = true;
 			}
 
 		}
-		if (stringB == false)
+		if (boolLiwanzeB == false)
 		{
 			cout << "Diese Liwanze existiert nicht! Bitte nochmal versuchen ";
 			continue;
 		}
 
-		make_connection(*a, *b);
-		cout << a->get_name() << ":" << endl;
-		a->print_tierone();
+		make_connection(lvec.at(iLiwanzA), lvec.at(iLiwanzB));
 
-		cout << b->get_name() << ":" << endl;
-		b->print_tierone();
+
+		cout << lvec.at(iLiwanzA).get_name() << ":" << endl;
+		lvec.at(iLiwanzA).print_tierone();
+
+		cout << lvec.at(iLiwanzB).get_name() << ":" << endl;
+		lvec.at(iLiwanzB).print_tierone();
+
+		boolLiwanzeA = false;
+		boolLiwanzeB = false;
+
+
+		//a = nullptr;
+		//b = nullptr;
 
 		
 
